@@ -15,24 +15,18 @@ A minimal, dependency-free job runner with retry capabilities.
 
 - `simple-job-runner`: Core functionality
 - `simple-job-runner-kysely`: Kysely database adapter
-- `simple-job-runner-prisma`: Prisma ORM adapter
 - `simple-job-runner-fs`: Filesystem adapter
-- `simple-job-runner-kv`: Cloudflare Workers KV adapter
 
 ## Installation
 
 ```bash
 # Install core package
-npm install simple-job-runner
+pnpm install simple-job-runner
 
 # Install adapter(s) you need
-npm install simple-job-runner-kysely
+pnpm install simple-job-runner-kysely
 # or
-npm install simple-job-runner-prisma
-# or
-npm install simple-job-runner-fs
-# or
-npm install simple-job-runner-kv
+pnpm install simple-job-runner-fs
 ```
 
 ## Basic Usage
