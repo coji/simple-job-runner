@@ -1,6 +1,6 @@
 {
   "name": "simple-job-runner-kysely",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Kysely adapter for simple-job-runner",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
