@@ -1,0 +1,38 @@
+{
+  "name": "simple-job-runner-kysely",
+  "version": "0.1.0",
+  "description": "Kysely adapter for simple-job-runner",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "job",
+    "queue",
+    "runner",
+    "kysely",
+    "sql",
+    "postgres",
+    "mysql",
+    "sqlite"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "kysely": "^0.27.6",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "kysely": ">=0.24.0",
+    "simple-job-runner": "workspace:*"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "simple-job-runner",
+  "version": "0.1.0",
+  "description": "A minimal job runner with retry capabilities",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "job",
+    "queue",
+    "runner",
+    "retry",
+    "background",
+    "task"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "events": "^3.3.0"
+  }
+}

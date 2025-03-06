@@ -1,0 +1,20 @@
+{
+  "name": "simple-job-runner-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "release": "changeset publish"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@changesets/cli": "^2.28.1",
+    "turbo": "^2.4.4",
+    "typescript": "^5.8.2"
+  },
+  "packageManager": "pnpm@10.5.2"
+}

@@ -1,0 +1,34 @@
+{
+  "name": "simple-job-runner-fs",
+  "version": "0.1.0",
+  "description": "FileSystem adapter for simple-job-runner",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "job",
+    "queue",
+    "runner",
+    "filesystem",
+    "fs",
+    "file"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "simple-job-runner": "workspace:*"
+  }
+}
