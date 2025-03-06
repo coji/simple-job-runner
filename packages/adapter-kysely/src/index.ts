@@ -85,15 +85,16 @@ export function createKyselyAdapter(db: Kysely<any>): StorageAdapter {
 
   return {
     /**
-     * Find all pending jobs
+     * Find jobs by status
      */
-    async findPending(): Promise<Job[]> {
-      const rows = await db
-        .selectFrom('jobs')
-        .where('status', '=', 'pending')
-        .selectAll()
-        .execute();
+    async findJobsByStatus(status?: JobStatus): Promise<Job[]> {
+      let query = db.selectFrom('jobs');
 
+      if (status) {
+        query = query.where('status', '=', status);
+      }
+
+      const rows = await query.selectAll().execute();
       return rows.map(rowToJob);
     },
 
@@ -198,8 +199,22 @@ export function createKyselyAdapter(db: Kysely<any>): StorageAdapter {
         .execute();
     },
 
+    /**
+     * Reset job status (typically from 'running' to 'pending')
+     */
+    async resetJobStatus(id: string, status: JobStatus): Promise<void> {
+      await db
+        .updateTable('jobs')
+        .set({
+          status,
+          updated_at: Date.now(),
+        })
+        .where('id', '=', id)
+        .execute();
+    },
+
     async listJobs(options?: {
-      status?: JobStatus;
+      status?: JobStatus[];
       limit?: number;
       offset?: number;
     }): Promise<Job[]> {
@@ -207,7 +222,7 @@ export function createKyselyAdapter(db: Kysely<any>): StorageAdapter {
 
       // Apply filters
       if (options?.status) {
-        query = query.where('status', '=', options.status);
+        query = query.where('status', 'in', options.status);
       }
 
       // Apply pagination

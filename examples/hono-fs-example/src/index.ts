@@ -320,7 +320,7 @@ app.get('/', (c) => {
 // ジョブ一覧を取得
 app.get('/api/jobs', async (c) => {
   try {
-    const jobs = await storage.listJobs({ status: 'running' });
+    const jobs = await storage.listJobs({ status: ['pending', 'running'] });
     return c.json({ success: true, jobs });
   } catch (error) {
     console.error('Error fetching jobs:', error);
