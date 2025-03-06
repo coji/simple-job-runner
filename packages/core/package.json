@@ -28,7 +28,5 @@
     "tsup": "^8.4.0",
     "typescript": "^5.8.2"
   },
-  "dependencies": {
-    "events": "^3.3.0"
-  }
+  "dependencies": {}
 }

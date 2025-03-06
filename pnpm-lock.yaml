@@ -85,10 +85,6 @@ importers:
         version: 5.8.2
 
   packages/core:
-    dependencies:
-      events:
-        specifier: ^3.3.0
-        version: 3.3.0
     devDependencies:
       '@types/node':
         specifier: ^22.13.9
@@ -641,10 +637,6 @@ packages:
     resolution: {integrity: sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==}
     engines: {node: '>=4'}
     hasBin: true
-
-  events@3.3.0:
-    resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
-    engines: {node: '>=0.8.x'}
 
   extendable-error@0.1.7:
     resolution: {integrity: sha512-UOiS2in6/Q0FK0R0q6UY9vYpQ21mr/Qn1KOnte7vsACuNJf514WvCCUHSRCPcgjPT2bAhNIJdlE6bVap1GKmeg==}
@@ -1666,8 +1658,6 @@ snapshots:
       '@esbuild/win32-x64': 0.25.0
 
   esprima@4.0.1: {}
-
-  events@3.3.0: {}
 
   extendable-error@0.1.7: {}
 
