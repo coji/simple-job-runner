@@ -82,15 +82,13 @@ export function createFSAdapter(options: FSAdapterOptions): StorageAdapter {
 
   return {
     /**
-     * Find all pending jobs
+     * Find jobs by status
      */
-    async findPending(): Promise<Job[]> {
+    async findJobsByStatus(status?: JobStatus): Promise<Job[]> {
       await ensureJobsDir();
 
       try {
         const files = await fsImpl.promises.readdir(jobsDir);
-
-        // Get all job files
         const jobFiles = files.filter((file) => file.endsWith('.json'));
 
         // Load all jobs
@@ -101,10 +99,15 @@ export function createFSAdapter(options: FSAdapterOptions): StorageAdapter {
           })
         );
 
-        // Filter to pending jobs and remove nulls
-        return jobs.filter(
-          (job): job is Job => job !== null && job.status === 'pending'
-        );
+        // Apply status filter if provided
+        if (status) {
+          return jobs.filter(
+            (job): job is Job => job !== null && job.status === status
+          );
+        }
+
+        // Return all non-null jobs
+        return jobs.filter((job): job is Job => job !== null);
       } catch (err) {
         // If directory doesn't exist yet, return empty array
         if (err instanceof Error && 'code' in err && err.code === 'ENOENT') {
@@ -202,8 +205,23 @@ export function createFSAdapter(options: FSAdapterOptions): StorageAdapter {
       await saveJob(job);
     },
 
+    /**
+     * Reset job status (typically from 'running' to 'pending')
+     */
+    async resetJobStatus(id: string, status: JobStatus): Promise<void> {
+      const job = await loadJob(id);
+      if (!job) {
+        throw new Error(`Job not found: ${id}`);
+      }
+
+      job.status = status;
+      job.updatedAt = Date.now();
+
+      await saveJob(job);
+    },
+
     async listJobs(options?: {
-      status?: JobStatus;
+      status?: JobStatus[];
       limit?: number;
       offset?: number;
     }): Promise<Job[]> {
@@ -215,24 +233,22 @@ export function createFSAdapter(options: FSAdapterOptions): StorageAdapter {
 
         // Load all jobs
         let jobs = await Promise.all(
-          jobFiles.map(async (file) => {
-            const id = path.basename(file, '.json');
-            return await loadJob(id);
-          })
-        );
-
-        // Filter null values
-        jobs = jobs.filter(
-          (job): job is Job => job !== null && job !== undefined
+          jobFiles
+            .map(async (file) => {
+              const id = path.basename(file, '.json');
+              return await loadJob(id);
+            })
+            .filter((job): job is Promise<Job> => job !== null)
         );
 
         // Apply status filter
         if (options?.status) {
-          jobs = jobs.filter((job) => job?.status === options.status);
+          const statusFilter = new Set(options.status);
+          jobs = jobs.filter((job) => statusFilter.has(job.status));
         }
 
         // Sort by creation date (descending)
-        jobs.sort((a, b) => (b?.createdAt ?? 0) - (a?.createdAt ?? 0));
+        jobs.sort((a, b) => b.createdAt - a.createdAt);
 
         // Apply pagination
         if (options?.offset || options?.limit) {

@@ -73,14 +73,21 @@ export function createRunner(storage: StorageAdapter): JobRunner {
    * Recover pending jobs
    */
   async function recover(): Promise<number> {
-    const pendingJobs = await storage.findPending();
+    const pendingJobs = await storage.findJobsByStatus('pending');
+    const runningJobs = await storage.findJobsByStatus('running');
 
-    // Start processing each pending job
-    for (const job of pendingJobs) {
+    // running 状態のジョブを pending にリセット
+    for (const job of runningJobs) {
+      await storage.resetJobStatus(job.id, 'pending');
+      events.emit('recover', job);
+    }
+
+    const jobsToRecover = [...pendingJobs, ...runningJobs];
+    for (const job of jobsToRecover) {
       setImmediate(() => process(job));
     }
 
-    return pendingJobs.length;
+    return jobsToRecover.length;
   }
 
   /**
@@ -100,7 +107,7 @@ export function createRunner(storage: StorageAdapter): JobRunner {
   }
 
   function listJobs(options?: {
-    status?: JobStatus;
+    status?: JobStatus[];
     limit?: number;
     offset?: number;
   }): Promise<Job[]> {

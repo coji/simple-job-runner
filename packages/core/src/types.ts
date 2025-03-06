@@ -15,9 +15,9 @@ export interface Job {
 
 export interface StorageAdapter {
   /**
-   * Find all pending jobs
+   * Find jobs by status
    */
-  findPending: () => Promise<Job[]>;
+  findJobsByStatus: (status?: JobStatus) => Promise<Job[]>;
 
   /**
    * Create a new job
@@ -40,6 +40,11 @@ export interface StorageAdapter {
   markFailed: (id: string, error: string) => Promise<void>;
 
   /**
+   * Reset job status (typically from 'running' to 'pending')
+   */
+  resetJobStatus: (id: string, status: JobStatus) => Promise<void>;
+
+  /**
    * Increment job attempt count
    */
   incAttempts: (id: string) => Promise<void>;
@@ -48,7 +53,7 @@ export interface StorageAdapter {
    * List all jobs with optional status filter
    */
   listJobs: (options?: {
-    status?: JobStatus;
+    status?: JobStatus[];
     limit?: number;
     offset?: number;
   }) => Promise<Job[]>;
@@ -65,6 +70,7 @@ export interface JobRunnerEvents {
   on(event: 'start', listener: (job: Job) => void): JobRunner;
   on(event: 'done', listener: (job: Job) => void): JobRunner;
   on(event: 'failed', listener: (job: Job) => void): JobRunner;
+  on(event: 'recover', listener: (job: Job) => void): JobRunner;
 }
 
 export interface JobRunner extends JobRunnerEvents {
@@ -88,7 +94,7 @@ export interface JobRunner extends JobRunnerEvents {
   recover(): Promise<number>;
 
   listJobs(options?: {
-    status?: JobStatus;
+    status?: JobStatus[];
     limit?: number;
     offset?: number;
   }): Promise<Job[]>;
